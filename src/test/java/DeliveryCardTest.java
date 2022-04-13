@@ -1,6 +1,7 @@
 import com.codeborne.selenide.Condition;
 
 import com.codeborne.selenide.Configuration;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
@@ -8,21 +9,27 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static org.openqa.selenium.remote.tracing.EventAttribute.setValue;
 
 public class DeliveryCardTest {
 
-  
+    @BeforeEach
+    void SetUp() {
+        open("http://localhost:9999");
+    }
+
     @Test
     void shouldSuccessfulFormSubmission() {
-        open("http://localhost:9999");
+
         $("[placeholder='Город']").setValue("Москва");
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE);
-        String verificationDate = LocalDate.now() .plusDays(3)
+        String verificationDate = LocalDate.now().plusDays(3)
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id='date'] input").setValue(verificationDate);
-        $("[name='name']").setValue("Ильнур Мамешев");
+        $(byName("name")).setValue("Ильнур Мамешев");
         $("[name='phone']").setValue("+79000000000");
         $("[data-test-id=agreement]").click();
         $x("//*[text()=\"Забронировать\"]").click();
@@ -34,9 +41,8 @@ public class DeliveryCardTest {
 
     @Test
     void shouldFailCity() {
-        open("http://localhost:9999");
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE);
-        String verificationDate = LocalDate.now() .plusDays(3)
+        String verificationDate = LocalDate.now().plusDays(3)
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id='date'] input").setValue(verificationDate);
         $("[name='name']").setValue("Ильнур Мамешев");
@@ -50,10 +56,9 @@ public class DeliveryCardTest {
 
     @Test
     void shouldFail() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Москва");
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE);
-        String verificationDate = LocalDate.now() .plusDays(3)
+        String verificationDate = LocalDate.now().plusDays(3)
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id='date'] input").setValue(verificationDate);
         $("[name='name']").setValue("Ilnur Mameshev");
@@ -67,10 +72,9 @@ public class DeliveryCardTest {
 
     @Test
     void shouldFailPhone() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Москва");
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE);
-        String verificationDate = LocalDate.now() .plusDays(3)
+        String verificationDate = LocalDate.now().plusDays(3)
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id='date'] input").setValue(verificationDate);
         $("[name='name']").setValue("Ильнур Мамешев");
@@ -84,10 +88,9 @@ public class DeliveryCardTest {
 
     @Test
     void shouldFailCheckBox() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Москва");
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE);
-        String verificationDate = LocalDate.now() .plusDays(3)
+        String verificationDate = LocalDate.now().plusDays(3)
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id='date'] input").setValue(verificationDate);
         $("[name='name']").setValue("Ильнур Мамешев");
@@ -97,14 +100,14 @@ public class DeliveryCardTest {
                 .shouldHave(Condition.text("Я соглашаюсь с условиями обработки и использования моих персональных данных"));
 
     }
-// Необязательная задача
+
+    // Необязательная задача
     @Test
     void shouldSuccessfulFormSubmissionOnWeekend() {
-        open("http://localhost:9999");
         $("[data-test-id=city] input").setValue("Мо");
         $(byText("Москва")).click();
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE);
-        String verificationDate = LocalDate.now() .plusDays(7)
+        String verificationDate = LocalDate.now().plusDays(7)
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id='date'] input").setValue(verificationDate);
         $("[name='name']").setValue("Ильнур Мамешев");
