@@ -23,7 +23,6 @@ public class DeliveryCardTest {
 
     @Test
     void shouldSuccessfulFormSubmission() {
-
         $("[placeholder='Город']").setValue("Москва");
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE);
         String verificationDate = LocalDate.now().plusDays(3)
@@ -106,14 +105,19 @@ public class DeliveryCardTest {
     void shouldSuccessfulFormSubmissionOnWeekend() {
         $("[data-test-id=city] input").setValue("Мо");
         $(byText("Москва")).click();
-        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.DELETE);
-        String verificationDate = LocalDate.now().plusDays(7)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        $("[data-test-id='date'] input").setValue(verificationDate);
+        $("[data-test-id=date] input").click();
+        int days=0;
+        while (days!=4){
+            $(".calendar").sendKeys(Keys.ARROW_RIGHT);
+            days++;
+        }
+        $(".calendar").sendKeys(Keys.ENTER);
         $("[name='name']").setValue("Ильнур Мамешев");
         $("[name='phone']").setValue("+79000000000");
         $("[data-test-id=agreement]").click();
         $x("//*[text()=\"Забронировать\"]").click();
+        String verificationDate = LocalDate.now().plusDays(7)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id=notification]")
                 .shouldHave(Condition.text("Успешно! Встреча успешно забронирована на " + verificationDate),
                         Duration.ofSeconds(15));
